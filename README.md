@@ -35,6 +35,8 @@ A production-ready, end-to-end machine learning pipeline for real-time credit ca
 
 ---
 
+<a id="business-problem"></a>
+
 ## 💳 Business Problem
 Credit card fraud costs the global payments industry over $32 billion annually, with losses projected to exceed $43 billion by 2028.
 
@@ -61,6 +63,8 @@ Financial institutions face three competing pressures:
 
 ---
 
+<a id="solution-overview"></a>
+
 ## 🧠 Solution Overview
 This project implements a dual-model fraud detection architecture that mirrors real-world production systems:
 
@@ -79,6 +83,8 @@ Combining both provides __defense__ in depth: XGBoost catches fraud that looks l
 | 5 | Audit logging | Every prediction logged | ✅ Kinesis → S3 |
 | 6 | Reproducible infra | One-click deploy | ✅ CloudFormation |
 ---
+<a id="architecture"></a>
+
 ## 🏗️ Architecture
 ```mermaid
 graph TD
@@ -104,6 +110,8 @@ graph TD
 | Demo UI        | Gradio                          | Scenario-based interactive testing        |
 
 ---
+<a id="dataset"></a>
+
 ## 📊 Dataset
 ULB Credit Card Fraud Detection Dataset — Kaggle
 | Attribute | Detail |
@@ -116,6 +124,8 @@ ULB Credit Card Fraud Detection Dataset — Kaggle
 
 > ⚠️ The dataset (`creditcard.csv`, 143 MB) is excluded from this repository due to GitHub's file size limit. Download it from [Kaggle](https://kaggle.com) and place it at `notebooks/creditcard.csv`.
 ---
+<a id="models"></a>
+
 ## 🤖 Models
 __1. XGBoost + SMOTE (Primary Classifier)__
 XGBoost is trained on labeled transaction data with SMOTE (Synthetic Minority Oversampling Technique) applied to address the severe class imbalance (0.172% fraud).
@@ -147,6 +157,8 @@ feature_dim      = 30
 | **Strength** | High precision on known fraud | Future-proof coverage |
 
 ---
+<a id="model-performance"></a>
+
 ## 📈 Model Performance
 Evaluated on a held-out test set (20% of 284,807 transactions):
 
@@ -161,6 +173,8 @@ Evaluated on a held-out test set (20% of 284,807 transactions):
 
 > At 10M daily transactions, a +2% recall improvement catches thousands of additional fraudulent transactions per day.
 ---
+<a id="project-structure"></a>
+
 ## 📁 Project Structure
 ```text
 fraud-detection-sagemaker/
@@ -192,6 +206,8 @@ fraud-detection-sagemaker/
 └── README.md
 ```
 ---
+<a id="prerequisites"></a>
+
 ## ✅ Prerequisites
 * AWS Account with SageMaker, Lambda, API Gateway, Kinesis, and S3 permissions
 * Python 3.8+
@@ -216,8 +232,9 @@ matplotlib>=3.6
 seaborn>=0.12
 ```
 ---
-## 🚀 Quick Start
+<a id="quick-start"></a>
 
+## 🚀 Quick Start
 ### 1. Clone the Repository
 ```python
 git clone https://github.com/MAOFILHO/fraud-detection-sagemaker.git
@@ -246,6 +263,8 @@ The notebook walks through:
 6. Endpoint deployment
 7. Real-time prediction testing
 ---
+<a id="deployment"></a>
+
 ## ☁️ Deployment
 ### Option A — CloudFormation (Recommended)
 Deploy the full infrastructure stack with one command:
@@ -292,6 +311,8 @@ predictor = model.deploy(
 | Base XGBoost | `sagemaker-soln-fdml--xgb-2026-05-04-09-35-13-752` |
 
 ---
+<a id="demo-app"></a>
+
 ## 🎮 Demo App
 An interactive __Gradio__ app lets you test both models against 8 real transaction scenarios from the ULB dataset — no API knowledge required.
 
@@ -303,7 +324,9 @@ python fraud_detection_gradio.py
 ```
 The app launches at `http://localhost:7860` and also provides a public share link.
 
-### Available Scenarios
+<a id="scenarios-tested"></a>
+
+## 🧪 Scenarios Tested
 
 | Scenario | Amount | Expected |
 | :---: | :--- | :--- |
@@ -328,6 +351,8 @@ The architecture transfers directly to other imbalanced classification problems:
 * 🚗 Insurance claims fraud — same dual-model pattern
 * ⚙️ Predictive maintenance — equipment failure from sensor data
 ---  
+<a id="cost-cleanup"></a>
+
 ## 💰 Cost & Cleanup
 > ⚠️ SageMaker endpoints incur charges while running (~$0.056/hour for `ml.t2.medium`). Delete them when not in use.
 
@@ -362,6 +387,8 @@ aws cloudformation delete-stack --stack-name fraud-detection-stack
 * [SMOTE — imbalanced-learn](https://imbalanced-learn.org)
 * [AWS CloudFormation Fraud Detection Solution (SO0056)](https://amazon.com)
 ---
+<a id="acknowledgements"></a>
+
 ## 🙏 Acknowledgements
 ULB Machine Learning Group — for the anonymised credit card dataset
 AWS SageMaker Team — for the open-source CloudFormation solution template (SO0056)
