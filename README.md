@@ -365,6 +365,7 @@ aws cloudformation delete-stack --stack-name fraud-detection-stack
 ULB Machine Learning Group — for the anonymised credit card dataset
 AWS SageMaker Team — for the open-source CloudFormation solution template (SO0056)
 
+
 ---
 ### 📄 License
 This project is licensed under the MIT License. See [LICENSE](LICENSE)  for details.
