@@ -1,25 +1,39 @@
-# 🛡️Credit Card Fraud Detection Using Amazon SageMaker
+# 🛡️ Credit Card Fraud Detection Using Amazon SageMaker
 
-![AWS SageMaker](https://shields.io)%2B?logo=SageMaker&logoColor=orange
+<p>
+  <img src="https://img.shields.io/badge/AWS-232F3E?style=flat-square&logo=amazonaws&logoColor=white">
+  <img src="https://img.shields.io/badge/SAGEMAKER-FF9900?style=flat-square">
+  <img src="https://img.shields.io/badge/PYTHON-3776AB?style=flat-square&logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/3.8+-4B8BBE?style=flat-square">
+  <img src="https://img.shields.io/badge/XGBOOST-4C566A?style=flat-square">
+  <img src="https://img.shields.io/badge/ML_MODEL-32CD32?style=flat-square">
+  <img src="https://img.shields.io/badge/GRADIO-555555?style=flat-square">
+  <img src="https://img.shields.io/badge/DEMO_UI-FF8C00?style=flat-square">
+  <img src="https://img.shields.io/badge/LICENSE-MIT-4A90E2?style=flat-square">
+</p>
 
+A production-ready, end-to-end machine learning pipeline for real-time credit card fraud detection, deployed on Amazon SageMaker using **XGBoost + SMOTE** and **Random Cut Forest**.
 
-A production-ready, end-to-end machine learning pipeline for real-time credit card fraud detection, deployed on Amazon SageMaker using XGBoost + SMOTE and Random Cut Forest.
+---
 
-## 📋Table of Contents
-* Business Problem
-* Solution Overview
-* Architecture
-* Dataset
-* Models
-* Model Performance
-* Project Structure
-* Prerequisites
-* Quick Start
-* Deployment
-* Demo App
-* Scenarios Tested
-* Cost & Cleanup
-##
+## 📋 Table of Contents
+ 
+- [Business Problem](#business-problem)
+- [Solution Overview](#solution-overview)
+- [Architecture](#architecture)
+- [Dataset](#dataset)
+- [Models](#models)
+- [Model Performance](#model-performance)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Deployment](#deployment)
+- [Demo App](#demo-app)
+- [Scenarios Tested](#scenarios-tested)
+- [Cost & Cleanup](#cost--cleanup)
+- [Acknowledgements](#acknowledgements)
+---
+
 ## 💳 Business Problem
 Credit card fraud costs the global payments industry over $32 billion annually, with losses projected to exceed $43 billion by 2028.
 
@@ -35,7 +49,7 @@ Financial institutions face three competing pressures:
 | **Class imbalance** | Fraud represents less than 0.2% of all transactions — traditional classifiers fail silently |
 | **Model Performance** | High precision and recall are critical to balance detection with user experience |
 
-## Who This Solves For
+### Who This Solves For
 
 | Stakeholder | Why They Care |
 | :--- | :--- |
@@ -43,7 +57,9 @@ Financial institutions face three competing pressures:
 | E-commerce Platforms | Minimize payment fraud, reduce manual review queues |
 | FinTech Startups | Deploy production-grade detection without building ML infrastructure |
 | Insurance Companies | Apply same anomaly detection patterns to claims fraud |
+
 ---
+
 ## 🧠 Solution Overview
 This project implements a dual-model fraud detection architecture that mirrors real-world production systems:
 
@@ -51,7 +67,7 @@ This project implements a dual-model fraud detection architecture that mirrors r
 * __XGBoost + SMOTE__ — Supervised classifier trained on historical fraud labels. Recognizes known fraud signatures with high precision.
 Combining both provides __defense__ in depth: XGBoost catches fraud that looks like past fraud; RCF catches fraud that looks like nothing legitimate.
 
-## Business Requirements Met
+### Business Requirements Met
 
 | # | Requirement | Target | Achieved |
 | :--- | :--- | :--- | :--- |
@@ -73,18 +89,21 @@ graph TD
     E --> F
     F --> G["Kinesis Firehose &rarr; S3 (Audit Log + Retraining Data)"]
 ```
-## AWS Services Used
-Layer	Service	Purpose
-Data Storage	Amazon S3	Patient CSV datasets and model artefacts
-Model Training	SageMaker Notebook + XGBoost	Training jobs with SMOTE rebalancing
-Anomaly Detection	SageMaker RCF	Unsupervised novelty detection
-Model Serving	SageMaker Endpoints	Real-time prediction API (< 100ms)
-Orchestration	AWS Lambda	Invokes endpoints, returns combined verdict
-API Layer	Amazon API Gateway	REST interface for client applications
-Audit Streaming	Amazon Kinesis Firehose	Streams every prediction to S3
-Infrastructure	AWS CloudFormation	Full stack as reproducible code
-Demo UI	Gradio	Scenario-based interactive testing
-## 📊 Dataset
+### AWS Services Used
+| Layer           | Service                         | Purpose                                   |
+|----------------|---------------------------------|-------------------------------------------|
+| Data Storage   | Amazon S3                       | Patient CSV datasets and model artefacts  |
+| Model Training | SageMaker Notebook + XGBoost    | Training jobs with SMOTE rebalancing      |
+| Anomaly Detection | SageMaker RCF                | Unsupervised novelty detection            |
+| Model Serving  | SageMaker Endpoints             | Real-time prediction API (< 100ms)        |
+| Orchestration  | AWS Lambda                      | Invokes endpoints, returns combined verdict |
+| API Layer      | Amazon API Gateway              | REST interface for client applications    |
+| Audit Streaming | Amazon Kinesis Firehose        | Streams every prediction to S3            |
+| Infrastructure | AWS CloudFormation              | Full stack as reproducible code           |
+| Demo UI        | Gradio                          | Scenario-based interactive testing        |
+
+---
+### 📊 Dataset
 ULB Credit Card Fraud Detection Dataset — Kaggle
 | Attribute | Detail |
 | :--- | :--- |
@@ -95,7 +114,7 @@ ULB Credit Card Fraud Detection Dataset — Kaggle
 | Privacy | V1–V28 are PCA-transformed to protect cardholder identity |
 
 > ⚠️ The dataset (`creditcard.csv`, 143 MB) is excluded from this repository due to GitHub's file size limit. Download it from [Kaggle](https://kaggle.com) and place it at `notebooks/creditcard.csv`.
-
+---
 ## 🤖 Models
 __1. XGBoost + SMOTE (Primary Classifier)__
 XGBoost is trained on labeled transaction data with SMOTE (Synthetic Minority Oversampling Technique) applied to address the severe class imbalance (0.172% fraud).
@@ -109,14 +128,14 @@ scale_pos_weight  = 1  # overridden by SMOTE rebalancing
 objective         = binary:logistic
 num_round         = 150
 ```
-## 2. Random Cut Forest (Anomaly Detector)
+### 2. Random Cut Forest (Anomaly Detector)
 An unsupervised model that learns the statistical structure of normal transactions and flags deviations — enabling detection of **new fraud patterns never seen during training.**
 ```python
 num_trees        = 50
 num_samples_per_tree = 256
 feature_dim      = 30
 ```
-## Why Two Models?
+### Why Two Models?
 
 | | XGBoost | Random Cut Forest |
 | :--- | :--- | :--- |
@@ -126,6 +145,7 @@ feature_dim      = 30
 | **Weakness** | Blind to new attack vectors | Higher false positive rate |
 | **Strength** | High precision on known fraud | Future-proof coverage |
 
+---
 ## 📈 Model Performance
 Evaluated on a held-out test set (20% of 284,807 transactions):
 
@@ -139,7 +159,7 @@ Evaluated on a held-out test set (20% of 284,807 transactions):
 | **F2 Score** | 71% | **83%** | +12% |
 
 > At 10M daily transactions, a +2% recall improvement catches thousands of additional fraudulent transactions per day.
-
+---
 ## 📁 Project Structure
 ```text
 fraud-detection-sagemaker/
@@ -172,14 +192,17 @@ fraud-detection-sagemaker/
 ```
 ---
 ## ✅ Prerequisites
-AWS Account with SageMaker, Lambda, API Gateway, Kinesis, and S3 permissions
-Python 3.8+
-AWS CLI configured (aws configure)
-Kaggle account to download the dataset
-### Python Dependencies
-pip install -r notebooks/requirements.txt
-Key packages:
+* AWS Account with SageMaker, Lambda, API Gateway, Kinesis, and S3 permissions
+* Python 3.8+
+* AWS CLI configured (aws configure)
+* Kaggle account to download the dataset
 
+### Python Dependencies
+```python
+pip install -r notebooks/requirements.txt
+```
+Key packages:
+```python
 boto3>=1.26
 sagemaker>=2.100
 pandas>=1.5
@@ -190,34 +213,42 @@ xgboost>=1.7
 gradio>=3.40
 matplotlib>=3.6
 seaborn>=0.12
-🚀 Quick Start
-1. Clone the Repository
+```
+---
+## 🚀 Quick Start
+
+### 1. Clone the Repository
+```python
 git clone https://github.com/MAOFILHO/fraud-detection-sagemaker.git
 cd fraud-detection-sagemaker
-2. Download the Dataset
-Download creditcard.csv from Kaggle and place it in:
-
+```
+### 2. Download the Dataset
+Download `creditcard.csv` from [Kaggle](https://kaggle.com) and place it in:
+```python
 notebooks/creditcard.csv
-3. Set Up SageMaker Environment
+```
+### 3. Set Up SageMaker Environment
 Launch the training notebook in your SageMaker Notebook Instance or SageMaker Studio:
-
+```python
 # From SageMaker terminal
 cd /home/ec2-user/SageMaker/notebooks
 jupyter notebook sagemaker_fraud_detection.ipynb
-4. Run the Notebook End-to-End
+```
+### 4. Run the Notebook End-to-End
 The notebook walks through:
 
-Data loading and exploratory analysis
-SMOTE oversampling for class balancing
-XGBoost training job on SageMaker
-Random Cut Forest training job
-Model evaluation and comparison
-Endpoint deployment
-Real-time prediction testing
-☁️ Deployment
-Option A — CloudFormation (Recommended)
+1. Data loading and exploratory analysis
+2. SMOTE oversampling for class balancing
+3. XGBoost training job on SageMaker
+4. Random Cut Forest training job
+5. Model evaluation and comparison
+6. Endpoint deployment
+7. Real-time prediction testing
+---
+## ☁️ Deployment
+### Option A — CloudFormation (Recommended)
 Deploy the full infrastructure stack with one command:
-
+```python
 aws cloudformation create-stack \
   --stack-name fraud-detection-stack \
   --template-body file://fraud-detection-using-machine-learning.yaml \
@@ -225,17 +256,18 @@ aws cloudformation create-stack \
   --parameters \
     ParameterKey=SolutionPrefix,ParameterValue=sagemaker-soln-fdml- \
     ParameterKey=CreateSageMakerNotebookInstance,ParameterValue=true
+```
 This provisions:
 
-S3 buckets (model data + output)
-SageMaker Notebook Instance
-Lambda function (event-processor)
-API Gateway (REST, IAM-authenticated)
-Kinesis Firehose delivery stream → S3
-All IAM roles and permissions
-Option B — Manual Endpoint Deployment
+* S3 buckets (model data + output)
+* SageMaker Notebook Instance
+* Lambda function (event-processor)
+* API Gateway (REST, IAM-authenticated)
+* Kinesis Firehose delivery stream → S3
+* All IAM roles and permissions
+### Option B — Manual Endpoint Deployment
 From inside the notebook:
-
+```python
 import sagemaker
 from sagemaker.xgboost import XGBoostModel
 
@@ -250,64 +282,98 @@ predictor = model.deploy(
     instance_type="ml.t2.medium",
     endpoint_name="sagemaker-soln-fdml--xgb-smote"
 )
-Endpoint Names
-Model	Endpoint Name
-XGBoost + SMOTE	sagemaker-soln-fdml--xgb-smote
-Base XGBoost	sagemaker-soln-fdml--xgb-2026-05-04-09-35-13-752
-🎮 Demo App
-An interactive Gradio app lets you test both models against 8 real transaction scenarios from the ULB dataset — no API knowledge required.
+```
+### Endpoint Names
 
-Run the Demo
+| Model | Endpoint Name |
+| :--- | :--- |
+| XGBoost + SMOTE | `sagemaker-soln-fdml--xgb-smote` |
+| Base XGBoost | `sagemaker-soln-fdml--xgb-2026-05-04-09-35-13-752` |
+
+---
+## 🎮 Demo App
+An interactive __Gradio__ app lets you test both models against 8 real transaction scenarios from the ULB dataset — no API knowledge required.
+
+### Run the Demo
+```python
 cd notebooks/
 pip install gradio boto3
 python fraud_detection_gradio.py
-The app launches at http://localhost:7860 and also provides a public share link.
+```
+The app launches at `http://localhost:7860` and also provides a public share link.
 
-Available Scenarios
-Scenario	Amount	Expected
-🛒 Grocery store	$149.62	✅ Legitimate
-☕ Coffee shop	$2.69	✅ Legitimate
-🍕 Restaurant	$1.98	✅ Legitimate
-🚌 Transport fare	$7.28	✅ Legitimate
-🚨 Stolen card — $0 probe	$0.00	🔴 FRAUD
-🚨 Overseas ATM	$529.00	🔴 FRAUD
-🚨 Card testing micro-charge #1	$1.00	🔴 FRAUD
-🚨 Card testing micro-charge #2	$1.00	🔴 FRAUD
+### Scenarios Tested
+
+| Scenario | Amount | Expected |
+| :---: | :--- | :--- |
+| 🛒 Grocery store | $149.62 | ✅ Legitimate |
+| ☕ Coffee shop | $2.69 | ✅ Legitimate |
+| 🍕 Restaurant | $1.98 | ✅ Legitimate |
+| 🚌 Transport fare | $7.28 | ✅ Legitimate |
+| 🚨 Stolen card — $0 probe | $0.00 | 🔴 **FRAUD** |
+| 🚨 Overseas ATM | $529.00 | 🔴 **FRAUD** |
+| 🚨 Card testing micro-charge #1 | $1.00 | 🔴 **FRAUD** |
+| 🚨 Card testing micro-charge #2 | $1.00 | 🔴 **FRAUD** |
+
+
 Each scenario uses a real row from the ULB dataset — predictions reflect actual model behaviour on production data.
 
-💡 Extending This Project
+---
+## 💡 Extending This Project
 The architecture transfers directly to other imbalanced classification problems:
 
-🏥 Medical diagnosis — rare disease detection from patient records
-🔒 Network intrusion detection — anomaly-based cybersecurity
-🚗 Insurance claims fraud — same dual-model pattern
-⚙️ Predictive maintenance — equipment failure from sensor data
-💰 Cost & Cleanup
-⚠️ SageMaker endpoints incur charges while running (~$0.056/hour for ml.t2.medium). Delete them when not in use.
+* 🏥 Medical diagnosis — rare disease detection from patient records
+* 🔒 Network intrusion detection — anomaly-based cybersecurity
+* 🚗 Insurance claims fraud — same dual-model pattern
+* ⚙️ Predictive maintenance — equipment failure from sensor data
+---  
+## 💰 Cost & Cleanup
+> ⚠️ SageMaker endpoints incur charges while running (~$0.056/hour for `ml.t2.medium`). Delete them when not in use.
 
-Delete Endpoints
+### Delete Endpoints
+```python
 import boto3
 sm = boto3.client("sagemaker")
 
 sm.delete_endpoint(EndpointName="sagemaker-soln-fdml--xgb-smote")
 sm.delete_endpoint(EndpointName="sagemaker-soln-fdml--xgb-2026-05-04-09-35-13-752")
-Delete CloudFormation Stack
+```
+### Delete CloudFormation Stack
+```python
 aws cloudformation delete-stack --stack-name fraud-detection-stack
-Estimated Costs (Single Run)
-Resource	Estimated Cost
-SageMaker Training (2 jobs, ml.m5.xlarge, ~20 min each)	~$0.30
-SageMaker Endpoint (ml.t2.medium, 1 hour)	~$0.056
-S3 Storage (model artefacts)	~$0.01
-Lambda + API Gateway (demo calls)	< $0.01
-Total	< $0.40
-📚 References
-ULB Credit Card Fraud Dataset — Kaggle
-Amazon SageMaker XGBoost Documentation
-Amazon SageMaker Random Cut Forest
-SMOTE — imbalanced-learn
-AWS CloudFormation Fraud Detection Solution (SO0056)
-🙏 Acknowledgements
+```
+### Estimated Costs (Single Run)
+
+| Resource | Estimated Cost |
+| :---: | :---: |
+| SageMaker Training (2 jobs, ml.m5.xlarge, ~20 min each) | ~$0.30 |
+| SageMaker Endpoint (ml.t2.medium, 1 hour) | ~$0.056 |
+| S3 Storage (model artefacts) | ~$0.01 |
+| Lambda + API Gateway (demo calls) | < $0.01 |
+| **Total** | **< $0.40** |
+
+---
+### 📚 References
+
+* [ULB Credit Card Fraud Dataset — Kaggle](https://kaggle.com)
+* [Amazon SageMaker XGBoost Documentation](https://amazon.com)
+* [Amazon SageMaker Random Cut Forest](https://amazon.com)
+* [SMOTE — imbalanced-learn](https://imbalanced-learn.org)
+* [AWS CloudFormation Fraud Detection Solution (SO0056)](https://amazon.com)
+---
+## 🙏 Acknowledgements
 ULB Machine Learning Group — for the anonymised credit card dataset
 AWS SageMaker Team — for the open-source CloudFormation solution template (SO0056)
-📄 License
-This project is licensed under the MIT License. See LICENSE for details.
+
+---
+### 📄 License
+This project is licensed under the MIT License. See [LICENSE](LICENSE)  for details.
+
+---
+<p align="center">
+  Built with 💗 on Amazon SageMaker
+</p>
+
+<p align="center">
+  ⭐ <a href="#">Star this repo</a> · 🐛 <a href="#">Report an issue</a> · 🔗 <a href="#">Connect on LinkedIn</a>
+</p>
