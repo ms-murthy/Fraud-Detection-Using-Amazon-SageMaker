@@ -303,7 +303,7 @@ python fraud_detection_gradio.py
 ```
 The app launches at `http://localhost:7860` and also provides a public share link.
 
-## Scenarios Tested
+### Available Scenarios
 
 | Scenario | Amount | Expected |
 | :---: | :--- | :--- |
