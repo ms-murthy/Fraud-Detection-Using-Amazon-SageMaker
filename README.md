@@ -30,7 +30,7 @@ A production-ready, end-to-end machine learning pipeline for real-time credit ca
 - [Deployment](#deployment)
 - [Demo App](#demo-app)
 - [Scenarios Tested](#scenarios-tested)
-- [Cost & Cleanup](#cost--cleanup)
+- [Cost & Cleanup](#cost-cleanup)
 - [Acknowledgements](#acknowledgements)
 ---
 
@@ -103,7 +103,7 @@ graph TD
 | Demo UI        | Gradio                          | Scenario-based interactive testing        |
 
 ---
-### 📊 Dataset
+## 📊 Dataset
 ULB Credit Card Fraud Detection Dataset — Kaggle
 | Attribute | Detail |
 | :--- | :--- |
